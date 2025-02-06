@@ -43,11 +43,13 @@ const Navbar = () => {
           alt="search"
         />
         <div className="group relative">
-          <img
-            className="w-5 cursor-pointer"
-            src={assets.profile_icon}
-            alt=""
-          />
+          <Link to={"/login"}>
+            <img
+              className="w-5 cursor-pointer"
+              src={assets.profile_icon}
+              alt=""
+            />
+          </Link>
           <div className="group-hover:block hidden absolute dropdown-menu pt-4 right-0">
             <div className="flex flex-col gap-2 w-36 p-4 bg-gray-500 text-white rounded">
               <p className="cursor-pointer hover:text-gray-300">My Profile</p>

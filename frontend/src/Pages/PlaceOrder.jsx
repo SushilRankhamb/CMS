@@ -4,13 +4,31 @@ import Title from "../Components/Title";
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    // Check form validity before navigating
+    const form = event.target;
+    if (form.checkValidity()) {
+      navigate("/orders"); // Navigate only if the form is valid
+    } else {
+      form.reportValidity(); // Show validation messages
+    }
+  };
+
   return (
-    <div className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t">
+    <form
+      onSubmit={onSubmitHandler}
+      className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t"
+    >
       <div className="flex- flex-col w-full gap-4 sm:max-w-[480px]">
         <div className="text-xl sm:text-2xl my-3">
           <Title text1={"DELIVERY"} text2={"INFORMATION"} />
         </div>
         <div className="flex gap-3">
+          {" "}
+          {/* Fixed typo: <d> -> <div> */}
           <input
             type="text"
             placeholder="First Name"
@@ -21,6 +39,7 @@ const PlaceOrder = () => {
             type="text"
             placeholder="Last Name"
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            required
           />
         </div>
 
@@ -28,22 +47,26 @@ const PlaceOrder = () => {
           type="email"
           placeholder="Email Address"
           className="border border-gray-300 rounded py-1.5 px-3.5 mt-3 w-full"
+          required
         />
         <input
           type="text"
           placeholder="Address"
           className="border border-gray-300 rounded py-1.5 px-3.5 my-3 w-full"
+          required
         />
         <div className="flex gap-3">
           <input
             type="text"
             placeholder="City"
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            required
           />
           <input
             type="text"
             placeholder="Province"
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            required
           />
         </div>
         <div className="flex gap-3">
@@ -51,17 +74,20 @@ const PlaceOrder = () => {
             type="number"
             placeholder="Zipcode"
             className="border border-gray-300 rounded py-1.5 px-3.5 my-3 w-full"
+            required
           />
           <input
             type="text"
             placeholder="Country"
             className="border border-gray-300 rounded py-1.5 px-3.5 my-3 w-full"
+            required
           />
         </div>
         <input
           type="number"
           placeholder="Phone No"
           className="border border-gray-300 rounded py-1.5 px-3.5  w-full"
+          required
         />
       </div>
 
@@ -73,25 +99,22 @@ const PlaceOrder = () => {
         <div className="mt-12">
           <Title text1={"PAYMENT"} text2={"METHOD"} />
           <div className=" flex items-center gap-3 border p-2 px-3 cursor-pointer">
-            <p
-              className={`min-w-3.5 h-3.5 border rounded-full bg-green-500`}
-            ></p>
+            <p className="min-w-3.5 h-3.5 border rounded-full bg-green-500"></p>
             <p className="text-gray-500 text-sm font-medium mx-4">
-              {" "}
               Cash on Delivery
             </p>
           </div>
         </div>
-        <div className="w-full text-center mt-5 ">
+        <div className="w-full text-center mt-5">
           <button
-            onClick={() => navigate("/orders")}
+            type="submit" // Ensures form validation triggers before navigation
             className="bg-black text-white text-sm px-24 my-3 py-3 rounded hover:bg-blue-600"
           >
             Place Order
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
