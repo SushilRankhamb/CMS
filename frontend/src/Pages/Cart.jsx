@@ -10,6 +10,7 @@ const Cart = () => {
     useContext(ShopContext);
 
   const [cartData, setCartData] = useState([]);
+
   useEffect(() => {
     const tempData = [];
     for (const items in cartItems) {
@@ -24,6 +25,23 @@ const Cart = () => {
       }
     }
     setCartData(tempData);
+
+    // Send the updated cart to the backend
+    const updateCartBackend = async () => {
+      try {
+        await fetch("/api/cart", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cartItems }),
+        });
+      } catch (error) {
+        console.error("Failed to update cart", error);
+      }
+    };
+
+    updateCartBackend();
   }, [cartItems]);
 
   return (
@@ -92,17 +110,15 @@ const Cart = () => {
           {" "}
           <CartTotal />
           <div className="w-full text-end">
-            <button>
-              <button
-                className="bg-black text-white text-sm px-8 my-3 py-3 rounded hover:bg-blue-600"
-                onClick={() =>
-                  cartData.length === 0
-                    ? toast.error("Add items to cart first")
-                    : navigate("/place-order")
-                }
-              >
-                Proceed to Checkout
-              </button>
+            <button
+              className="bg-black text-white text-sm px-8 my-3 py-3 rounded hover:bg-blue-600"
+              onClick={() =>
+                cartData.length === 0
+                  ? toast.error("Add items to cart first")
+                  : navigate("/place-order")
+              }
+            >
+              Proceed to Checkout
             </button>
           </div>
         </div>

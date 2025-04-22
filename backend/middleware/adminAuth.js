@@ -10,13 +10,11 @@ const adminAuth = async (req, res, next) => {
       });
     }
     const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (tokenDecode !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
-      return res.json({
-        success: false,
-        message: "Not Autorized",
-      });
-    }
+    const adminString = process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD;
+    
+    if (tokenDecode !== adminString) {
+      return res.json({ success: false, message: "Not Authorized" });
+    }    
     next();
   } catch (error) {
     console.log(error);
