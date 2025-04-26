@@ -1,24 +1,25 @@
 import jwt from "jsonwebtoken";
+import userModel from "../models/userModel.js";
 
 const adminAuth = async (req, res, next) => {
   try {
-    const { token } = req.headers;
+    const token = req.headers.token || req.headers.authorization;
     if (!token) {
-      return res.json({
-        success: false,
-        message: "Not Autorized",
-      });
+      return res.status(401).json({ success: false, message: "Not Authorized: No token provided" });
     }
-    const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
-    const adminString = process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD;
-    
-    if (tokenDecode !== adminString) {
-      return res.json({ success: false, message: "Not Authorized" });
-    }    
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await userModel.findById(decoded.id);
+
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({ success: false, message: "Not Authorized: Admin access only" });
+    }
+
+    req.user = user;
     next();
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    console.error(error);
+    res.status(401).json({ success: false, message: "Invalid or expired token" });
   }
 };
 

@@ -23,7 +23,7 @@ const Footer = () => {
         <div>
           <p className="text-xl font-medium mb-5">GET IN TOUCH </p>
           <ul className="flex flex-col gap-1 text-gray-600">
-            <li>+923165580212</li>
+            <li>+918530213147</li>
             <li>contact@naturesPower.com</li>
           </ul>
         </div>
@@ -31,7 +31,8 @@ const Footer = () => {
       <div>
         <hr />
         <p className="py-5 text-sm text-center">
-          Copyright 2025@ NaturesPower.com - All Rights Reserved
+          Copyright 2025@ NaturesPower.com - All Rights Reserved <br />
+          Created by Sushil Rankhamb & Abhijeet Sarkate .
         </p>
       </div>
     </div>
