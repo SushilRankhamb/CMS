@@ -12,15 +12,12 @@ const Product = () => {
   const [size, setSize] = useState("");
 
   const fetchProductsData = async () => {
-    products.map((item) => {
-      if (item._id == productId) {
-        setProductData(item);
-        setImage(item.image[0]);
-
-        return null;
-      }
-    });
-  };
+    const foundProduct = products.find((item) => item._id == productId);
+    if (foundProduct) {
+      setProductData(foundProduct);
+      setImage(foundProduct.image[0]);
+    }
+  };  
 
   useEffect(() => {
     fetchProductsData();

@@ -10,13 +10,24 @@ import Collection from "./Pages/Collection";
 import Contact from "./Pages/Contact";
 import About from "./Pages/About";
 import Footer from "./Components/Footer";
-import SearchBar from "./Components/searchBar";
+import SearchBar from "./Components/SearchBar";
 import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'; // Important CSS import for react-toastify
 
 const App = () => {
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <Navbar />
       <SearchBar />
       <Routes>

@@ -1,19 +1,47 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import CartTotal from "../Components/CartTotal";
 import Title from "../Components/Title";
+import { toast } from "react-toastify";
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault(); // Prevent default form submission
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
 
-    // Check form validity before navigating
     const form = event.target;
     if (form.checkValidity()) {
-      navigate("/orders"); // Navigate only if the form is valid
+      const formData = new FormData(form);
+      const orderData = Object.fromEntries(formData.entries());
+
+      try {
+        setLoading(true); // Start loading
+        const response = await fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+          body: JSON.stringify(orderData),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          toast.success("🎉 Order placed successfully!");
+          navigate("/orders");
+        } else {
+          toast.error(data.message || "❌ Failed to place order");
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("❌ Order failed, try again!");
+      } finally {
+        setLoading(false); // Stop loading
+      }
     } else {
-      form.reportValidity(); // Show validation messages
+      form.reportValidity();
     }
   };
 
@@ -22,97 +50,45 @@ const PlaceOrder = () => {
       onSubmit={onSubmitHandler}
       className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t"
     >
-      <div className="flex- flex-col w-full gap-4 sm:max-w-[480px]">
-        <div className="text-xl sm:text-2xl my-3">
-          <Title text1={"DELIVERY"} text2={"INFORMATION"} />
-        </div>
-        <div className="flex gap-3">
-          {" "}
-          {/* Fixed typo: <d> -> <div> */}
+      <div className="w-full sm:w-[60%]">
+        <Title title="Place Your Order" />
+        
+        {/* Example Input Fields */}
+        <div className="flex flex-col gap-4 mt-6">
           <input
+            name="address"
             type="text"
-            placeholder="First Name"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            placeholder="Delivery Address"
             required
+            className="border p-2 rounded"
           />
           <input
+            name="phone"
             type="text"
-            placeholder="Last Name"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            placeholder="Phone Number"
             required
+            className="border p-2 rounded"
+          />
+          <input
+            name="note"
+            type="text"
+            placeholder="Order Notes (Optional)"
+            className="border p-2 rounded"
           />
         </div>
 
-        <input
-          type="email"
-          placeholder="Email Address"
-          className="border border-gray-300 rounded py-1.5 px-3.5 mt-3 w-full"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Address"
-          className="border border-gray-300 rounded py-1.5 px-3.5 my-3 w-full"
-          required
-        />
-        <div className="flex gap-3">
-          <input
-            type="text"
-            placeholder="City"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Province"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            required
-          />
-        </div>
-        <div className="flex gap-3">
-          <input
-            type="number"
-            placeholder="Zipcode"
-            className="border border-gray-300 rounded py-1.5 px-3.5 my-3 w-full"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Country"
-            className="border border-gray-300 rounded py-1.5 px-3.5 my-3 w-full"
-            required
-          />
-        </div>
-        <input
-          type="number"
-          placeholder="Phone No"
-          className="border border-gray-300 rounded py-1.5 px-3.5  w-full"
-          required
-        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-6 bg-black text-white py-3 px-6 rounded hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? "Placing Order..." : "Place Order"}
+        </button>
       </div>
 
-      <div className="mt-8">
-        <div className="mt-8 min-w-80">
-          <CartTotal />
-        </div>
-
-        <div className="mt-12">
-          <Title text1={"PAYMENT"} text2={"METHOD"} />
-          <div className=" flex items-center gap-3 border p-2 px-3 cursor-pointer">
-            <p className="min-w-3.5 h-3.5 border rounded-full bg-green-500"></p>
-            <p className="text-gray-500 text-sm font-medium mx-4">
-              Cash on Delivery
-            </p>
-          </div>
-        </div>
-        <div className="w-full text-center mt-5">
-          <button
-            type="submit" // Ensures form validation triggers before navigation
-            className="bg-black text-white text-sm px-24 my-3 py-3 rounded hover:bg-blue-600"
-          >
-            Place Order
-          </button>
-        </div>
+      {/* Cart Total Section */}
+      <div className="w-full sm:w-[35%]">
+        <CartTotal />
       </div>
     </form>
   );

@@ -1,0 +1,1 @@
+export const baseURL = "https://cms-f967.onrender.com"
