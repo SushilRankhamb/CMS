@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { ShopContext } from "../Context/ShopContext";
 import { assets } from "../assets/frontend_assets/assets";
 import RelatedProducts from "../Components/RelatedProducts";
+import { toast } from "react-toastify"; // IMPORT TOASTIFY
 
 const Product = () => {
   const { productId } = useParams();
@@ -17,11 +18,26 @@ const Product = () => {
       setProductData(foundProduct);
       setImage(foundProduct.image[0]);
     }
-  };  
+  };
 
   useEffect(() => {
     fetchProductsData();
   }, [productId, products]);
+
+  const handleAddToCart = () => {
+    if (size) {
+      addToCart(productData._id, size);
+      toast.success(`Added ${productData.name} to cart!`, {
+        position: "bottom-left",
+        autoClose: 2000, // Duration in ms
+      });
+    } else {
+      toast.error("Please select a size first!", {
+        position: "bottom-left",
+        autoClose: 2000, // Duration in ms
+      });
+    }
+  };
 
   return productData ? (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
@@ -77,7 +93,7 @@ const Product = () => {
             </div>
           </div>
           <button
-            onClick={() => addToCart(productData._id, size)}
+            onClick={handleAddToCart}
             className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700 "
           >
             ADD TO CART
