@@ -53,6 +53,10 @@ import p_img49 from './p_img49.png'
 import p_img50 from './p_img50.png'
 import p_img51 from './p_img51.png'
 import p_img52 from './p_img52.png'
+import one from './one.png';
+import two from './two.png';
+import three from './three.png';
+import four from './four.png';
 
 
 import logo from './logo.png'
@@ -94,6 +98,42 @@ export const assets = {
     stripe_logo,
     cross_icon
 }
+
+export const newArrivalProducts = [
+    {
+      _id: "new001",
+      name: "Crimson Rose Dress",
+      description: "",
+      price: 150,
+      image: [one],
+      category: "Men",
+      subCategory: "Topwear",
+      sizes: ["M", "L", "XL"],
+      date: Date.now(),
+    },
+    {
+      _id: "new002",
+      name: "Rainbow Ruffle Gown",
+      description: "",
+      price: 250,
+      image: [two],
+      category: "Women",
+      subCategory: "Dresses",
+      sizes: ["S", "M", "L"],
+      date: Date.now(),
+    },
+    {
+      _id: "new003",
+      name: "Royal Festive Saree",
+      description: "",
+      price: 120,
+      image: [three],
+      category: "Kids",
+      subCategory: "Topwear",
+      sizes: ["XS", "S", "M"],
+      date: Date.now(),
+    }
+  ];  
 
 export const products = [
     {

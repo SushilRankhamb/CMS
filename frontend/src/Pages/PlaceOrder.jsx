@@ -10,15 +10,23 @@ const PlaceOrder = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-
     const form = event.target;
+
     if (form.checkValidity()) {
       const formData = new FormData(form);
-      const orderData = Object.fromEntries(formData.entries());
+      const formEntries = Object.fromEntries(formData.entries());
+
+      // Also get cart items (assuming you store cart in localStorage)
+      const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+
+      const orderData = {
+        ...formEntries,
+        cart: cartItems,
+      };
 
       try {
-        setLoading(true); // Start loading
-        const response = await fetch("/api/orders", {
+        setLoading(true);
+        const response = await fetch("http://localhost:3000/api/orders", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -28,6 +36,7 @@ const PlaceOrder = () => {
         });
 
         const data = await response.json();
+
         if (response.ok) {
           toast.success("🎉 Order placed successfully!");
           navigate("/orders");
@@ -38,7 +47,7 @@ const PlaceOrder = () => {
         console.error(error);
         toast.error("❌ Order failed, try again!");
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     } else {
       form.reportValidity();
@@ -52,29 +61,19 @@ const PlaceOrder = () => {
     >
       <div className="w-full sm:w-[60%]">
         <Title title="Place Your Order" />
-        
-        {/* Example Input Fields */}
+
         <div className="flex flex-col gap-4 mt-6">
-          <input
-            name="address"
-            type="text"
-            placeholder="Delivery Address"
-            required
-            className="border p-2 rounded"
-          />
-          <input
-            name="phone"
-            type="text"
-            placeholder="Phone Number"
-            required
-            className="border p-2 rounded"
-          />
-          <input
-            name="note"
-            type="text"
-            placeholder="Order Notes (Optional)"
-            className="border p-2 rounded"
-          />
+          <input name="address" type="text" placeholder="Delivery Address" required className="border p-2 rounded" />
+          <input name="phone" type="text" placeholder="Phone Number" required className="border p-2 rounded" />
+          <input name="city" type="text" placeholder="City" required className="border p-2 rounded" />
+          <input name="country" type="text" placeholder="Country" required className="border p-2 rounded" />
+          <input name="pincode" type="text" placeholder="Pincode" required className="border p-2 rounded" />
+          <select name="paymentMethod" required className="border p-2 rounded">
+            <option value="">Select Payment Method</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="Online">Online Payment</option>
+          </select>
+          <input name="note" type="text" placeholder="Order Notes (Optional)" className="border p-2 rounded" />
         </div>
 
         <button
@@ -86,7 +85,6 @@ const PlaceOrder = () => {
         </button>
       </div>
 
-      {/* Cart Total Section */}
       <div className="w-full sm:w-[35%]">
         <CartTotal />
       </div>

@@ -1,9 +1,10 @@
-import jwt from "jsonwebtoken";
-import userModel from "../models/userModel.js";
+// adminOrUserAuth.js
+import jwt from 'jsonwebtoken';
+import userModel from '../models/userModel.js';
 
-const adminAuth = async (req, res, next) => {
+const adminOrUserAuth = async (req, res, next) => {
   try {
-    const token = req.headers.token || req.headers.authorization;
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1]; // Extract token from "Bearer <token>"
     if (!token) {
       return res.status(401).json({ success: false, message: "Not Authorized: No token provided" });
     }
@@ -11,8 +12,8 @@ const adminAuth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await userModel.findById(decoded.id);
 
-    if (!user || user.role !== "admin") {
-      return res.status(403).json({ success: false, message: "Not Authorized: Admin access only" });
+    if (!user || (user.role !== "admin" && user.role !== "user")) {
+      return res.status(403).json({ success: false, message: "Not Authorized: Admin or User access only" });
     }
 
     req.user = user;
@@ -23,4 +24,4 @@ const adminAuth = async (req, res, next) => {
   }
 };
 
-export default adminAuth;
+export default adminOrUserAuth;

@@ -111,4 +111,24 @@ const registerUser = async (req, res) => {
   }
 };
 
-export { adminLogin, loginUser, registerUser };
+const updateCart = async (req, res) => {
+  const { userId, cartData } = req.body;
+
+  try {
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Update the cartData field in the user document
+    user.cartData = cartData;
+
+    await user.save();  // Save the updated user document with the new cart data
+    return res.status(200).json({ success: true, message: "Cart updated successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export { adminLogin, loginUser, registerUser, updateCart };

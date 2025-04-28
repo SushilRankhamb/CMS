@@ -25,7 +25,11 @@ const Cart = () => {
       }
     }
     setCartData(tempData);
-
+  
+    // 🛑 ADD this part to save updated cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+    console.log('Cart data saved to localStorage:', localStorage.getItem('cart'));
+  
     const updateCartBackend = async () => {
       try {
         await fetch("/api/cart", {
@@ -39,10 +43,11 @@ const Cart = () => {
         console.error("Failed to update cart", error);
       }
     };
-
+  
     updateCartBackend();
   }, [cartItems]);
-
+  
+  
   return (
     <div className="border-t pt-14">
       <div className="text-2xl mb-3">
@@ -61,7 +66,7 @@ const Cart = () => {
                 <div>
                   <p className="text-sm sm:text-lg font-medium">{productData.name}</p>
                   <div className="flex items-center gap-5 mt-2">
-                    <p>{currency}{productData.price}</p>
+                    <p>Rs.{productData.price}</p>
                     <p className="border bg-slate-50 px-4 sm:py-1">{item.size}</p>
                   </div>
                 </div>

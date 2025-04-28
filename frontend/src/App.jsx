@@ -12,6 +12,7 @@ import About from "./Pages/About";
 import Footer from "./Components/Footer";
 import SearchBar from "./Components/SearchBar";
 import { ToastContainer } from "react-toastify";
+import NewArrivals from "./Pages/NewArrivals";
 import 'react-toastify/dist/ReactToastify.css'; // Important CSS import for react-toastify
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/place-order" element={<PlaceOrder />} />
+        <Route path="/new-arrivals" element={<NewArrivals />} />
         <Route path="/orders" element={<Orders />} />
       </Routes>
       <Footer />

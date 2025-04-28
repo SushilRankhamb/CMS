@@ -1,13 +1,14 @@
+// routes/orderRoute.js
 import express from "express";
 import { createOrder, getOrders } from "../controllers/orderController.js";
-import { verifyToken } from "../middleware/authMiddleware.js";
+import adminOrUserAuth from "../middleware/adminAuth.js";
 
 const router = express.Router();
 
-// GET all orders
-router.get("/", verifyToken, getOrders);
+// POST create order
+router.post("/", adminOrUserAuth, createOrder);
 
-// POST create new order ✅
-router.post("/", verifyToken, createOrder);
+// GET orders
+router.get("/", adminOrUserAuth, getOrders);
 
 export default router;
